@@ -3,58 +3,50 @@ import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "1234";
 
-// Create a server-side Supabase client with the service role key (server-only)
-const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
-
+// Use the service role key server-side for unrestricted writes
+const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+  auth: { persistSession: false },
+});
 
 export async function POST(req: Request) {
   try {
-    // Accept multipart form data
     const formData = await req.formData();
-
-    // Password check
-    const password = (formData.get("password") as string) || "";
-    if (password !== ADMIN_PASSWORD) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const title = (formData.get("title") as string) || "";
-    const file = formData.get("file") as File | null;
+    const file = formData.get("file") as File;
+    const title = formData.get("title") as string;
 
     if (!file || !title) {
-      return NextResponse.json(
-        { error: "Missing file or title" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing file or title" }, { status: 400 });
     }
 
-    // Use exact bucket name (case sensitive). You said "Newsletter"
-    const bucketName = "Newsletter";
-
     const timestamp = Date.now();
-    // sanitize file name a little
-    const safeName = file.name.replace(/\s+/g, "-");
-    const filePath = `${bucketName}/${timestamp}-${safeName}`;
+    const filePath = `newsletters/${timestamp}-${file.name}`;
 
-    // Upload to storage (file is a web File/Blob, which is acceptable)
+    // Convert File to Buffer for upload
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // ✅ Upload to your actual bucket name: "newsletter"
     const { error: uploadError } = await supabase.storage
-      .from(bucketName)
-      .upload(filePath, file, { cacheControl: "3600", upsert: false });
+      .from("newsletter")
+      .upload(filePath, buffer, {
+        contentType: file.type,
+        upsert: false,
+      });
 
     if (uploadError) {
+      console.error("Upload error:", uploadError);
       return NextResponse.json({ error: uploadError.message }, { status: 500 });
     }
 
-    // Get public url (if bucket is public). If private, you'd create signed URL.
-    const { data: publicData } = supabase.storage
-      .from(bucketName)
+    // Get public URL
+    const { data: publicUrlData } = supabase.storage
+      .from("newsletter")
       .getPublicUrl(filePath);
 
-    const publicUrl = publicData?.publicUrl ?? null;
+    const publicUrl = publicUrlData.publicUrl;
 
-    // Insert metadata into your table (table name: "newsletter")
+    // Insert into database
     const { error: insertError } = await supabase.from("newsletter").insert([
       {
         title,
@@ -64,30 +56,28 @@ export async function POST(req: Request) {
     ]);
 
     if (insertError) {
+      console.error("Insert error:", insertError);
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, fileUrl: publicUrl });
   } catch (err: any) {
-    console.error("Upload route error:", err);
-    return NextResponse.json({ error: err?.message || "Unknown error" }, { status: 500 });
+    console.error("Upload error:", err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
 
 export async function GET() {
-  try {
-    // return latest record
-    const { data, error } = await supabase
-      .from("newsletter")
-      .select("*")
-      .order("uploaded_at", { ascending: false })
-      .limit(1);
+  const { data, error } = await supabase
+    .from("newsletter")
+    .select("*")
+    .order("uploaded_at", { ascending: false })
+    .limit(1);
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    return NextResponse.json(data?.[0] || {});
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || "Unknown error" }, { status: 500 });
+  if (error) {
+    console.error("Fetch error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  return NextResponse.json(data?.[0] || {});
 }
