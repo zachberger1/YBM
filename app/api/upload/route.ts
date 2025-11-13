@@ -3,17 +3,19 @@ import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const BUCKET = process.env.SUPABASE_BUCKET_NAME!;
 
-// Use the service role key server-side for unrestricted writes
-const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-  auth: { persistSession: false },
-});
+if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+  throw new Error("Supabase environment variables are missing.");
+}
+
+const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const title = formData.get("title") as string;
+    const file = formData.get("file") as File | null;
+    const title = formData.get("title") as string | null;
 
     if (!file || !title) {
       return NextResponse.json({ error: "Missing file or title" }, { status: 400 });
@@ -21,32 +23,27 @@ export async function POST(req: Request) {
 
     const timestamp = Date.now();
     const filePath = `newsletters/${timestamp}-${file.name}`;
-
-    // Convert File to Buffer for upload
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // ✅ Upload to your actual bucket name: "newsletter"
+ 
+    // ✅ Upload to the lowercase bucket name
     const { error: uploadError } = await supabase.storage
-      .from("newsletter")
-      .upload(filePath, buffer, {
-        contentType: file.type,
+      .from(BUCKET)
+      .upload(filePath, file, {
+        cacheControl: "3600",
         upsert: false,
       });
 
     if (uploadError) {
-      console.error("Upload error:", uploadError);
+      console.error("Upload error:", uploadError.message);
       return NextResponse.json({ error: uploadError.message }, { status: 500 });
     }
 
-    // Get public URL
     const { data: publicUrlData } = supabase.storage
-      .from("newsletter")
+      .from(BUCKET)
       .getPublicUrl(filePath);
 
     const publicUrl = publicUrlData.publicUrl;
 
-    // Insert into database
+    // ✅ Insert into lowercase table name
     const { error: insertError } = await supabase.from("newsletter").insert([
       {
         title,
@@ -56,28 +53,13 @@ export async function POST(req: Request) {
     ]);
 
     if (insertError) {
-      console.error("Insert error:", insertError);
+      console.error("Insert error:", insertError.message);
       return NextResponse.json({ error: insertError.message }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, fileUrl: publicUrl });
   } catch (err: any) {
-    console.error("Upload error:", err);
+    console.error("Upload route error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
-}
-
-export async function GET() {
-  const { data, error } = await supabase
-    .from("newsletter")
-    .select("*")
-    .order("uploaded_at", { ascending: false })
-    .limit(1);
-
-  if (error) {
-    console.error("Fetch error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json(data?.[0] || {});
 }
