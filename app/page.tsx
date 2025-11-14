@@ -29,6 +29,8 @@ export default function Home() {
       try {
         const res = await fetch("/api/latest");
         const data = await res.json();
+        console.log("API /api/latest response:", data);
+
         if (res.ok && data.fileUrl) setLatestNewsletter(data.fileUrl);
       } catch (err) {
         console.error("Error fetching latest newsletter:", err);
