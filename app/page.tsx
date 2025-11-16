@@ -165,7 +165,7 @@ export default function Home() {
               No newsletter uploaded yet.
             </p>
           )}
-        </div>
+        </div> 
       </section>
 
       {/* FOOTER */}
