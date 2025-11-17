@@ -1,3 +1,9 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const config = {
+  api: { bodyParser: false },
+};
+
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
@@ -18,13 +24,15 @@ export async function POST(req: Request) {
     const title = formData.get("title") as string | null;
 
     if (!file || !title) {
-      return NextResponse.json({ error: "Missing file or title" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing file or title" },
+        { status: 400 }
+      );
     }
 
     const timestamp = Date.now();
     const filePath = `newsletters/${timestamp}-${file.name}`;
- 
-    // ✅ Upload to the lowercase bucket name
+
     const { error: uploadError } = await supabase.storage
       .from(BUCKET)
       .upload(filePath, file, {
@@ -43,7 +51,6 @@ export async function POST(req: Request) {
 
     const publicUrl = publicUrlData.publicUrl;
 
-    // ✅ Insert into lowercase table name
     const { error: insertError } = await supabase.from("newsletter").insert([
       {
         title,
