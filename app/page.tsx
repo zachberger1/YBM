@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Plus } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
 
 export default function Home() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -17,17 +16,12 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [latestNewsletter, setLatestNewsletter] = useState<string | null>(null);
 
-  const router = useRouter();
-  const pathname = usePathname();
-
-  /* Scroll CTA visibility */
   useEffect(() => {
     const handleScroll = () => setShowScrollCTA(window.scrollY > 300);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* Fetch newsletter */
   useEffect(() => {
     const fetchLatest = async () => {
       try {
@@ -41,28 +35,6 @@ export default function Home() {
     fetchLatest();
   }, []);
 
-  /* Mobile Zmanim scroll */
-  const handleZmanimClick = () => {
-    setMobileOpen(false);
-
-    if (pathname === "/") {
-      const el = document.getElementById("newsletter");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    } else {
-      router.push("/?scroll=newsletter");
-    }
-  };
-
-  /* Scroll after redirect */
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("scroll") === "newsletter") {
-      const el = document.getElementById("newsletter");
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 350);
-    }
-  }, []);
-
-  /* Admin Upload */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files ? e.target.files[0] : null);
   };
@@ -86,7 +58,6 @@ export default function Home() {
       const data = await res.json();
       if (res.ok) {
         alert("Upload successful!");
-        console.log("File available at:", data.fileUrl);
       } else {
         alert("Upload failed: " + data.error);
       }
@@ -108,79 +79,72 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#fdfbf3] relative">
 
-{/* =========================== HEADER UPDATED =========================== */}
+      {/* HEADER */}
+      <header className="w-full bg-[#EBE6CA] flex justify-between fixed top-0 left-0 z-50 shadow-md">
+        <div className="max-w-7xl w-full mx-auto flex justify-between items-center px-6 py-2">
 
-<header className="w-full bg-[#EBE6CA] fixed top-0 left-0 z-50 shadow-md">
-  <div className="max-w-7xl w-full mx-auto flex justify-between items-center px-6 py-2">
+          <Link href="/" className="flex items-center space-x-3">
+            <Image src="/logo.svg" alt="Logo" width={200} height={50} />
+          </Link>
 
-    {/* Logo */}
-    <Link href="/" className="flex items-center space-x-3">
-      <Image src="/logo.svg" alt="Logo" width={200} height={50} />
-    </Link>
+          <nav className="hidden md:flex gap-6 items-center font-medium text-black">
+            <Link href="/">Home</Link>
 
-    {/* DESKTOP NAV */}
-    <nav className="hidden md:flex gap-6 items-center font-medium text-black">
-      <Link href="/">Home</Link>
+            <Link
+              href="#newsletter"
+              className="px-4 py-2 bg-white text-[#211F40] rounded-full font-semibold shadow hover:bg-gray-200 transition"
+            >
+              Zmanim
+            </Link>
 
-      <button
-        onClick={handleZmanimClick}
-        className="px-4 py-2 bg-white text-[#211F40] rounded-full font-semibold shadow hover:bg-gray-200 transition"
-      >
-        Zmanim
-      </button>
+            <Link
+              href="/donate"
+              className="px-4 py-2 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-[#211F40] transition"
+            >
+              Donate
+            </Link>
+          </nav>
 
-      <Link
-        href="/donate"
-        className="px-4 py-2 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-[#211F40] transition"
-      >
-        Donate
-      </Link>
-    </nav>
+          <div className="md:hidden">
+            <button onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen ? <HiX size={28} /> : <HiMenu size={28} />}
+            </button>
+          </div>
+        </div>
 
-    {/* MOBILE BUTTON */}
-    <div className="md:hidden">
-      <button onClick={() => setMobileOpen(true)}>
-        <HiMenu size={28} />
-      </button>
-    </div>
-  </div>
+        {mobileOpen && (
+          <div className="fixed inset-0 bg-black/80 text-white flex flex-col items-center justify-center space-y-8 text-2xl font-semibold z-[9999]">
+            <Link href="/" onClick={() => setMobileOpen(false)}>Home</Link>
 
-  {/* FULLSCREEN MOBILE OVERLAY */}
-  {mobileOpen && (
-    <div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center space-y-8 z-[9999] text-white text-2xl font-semibold animate-fadeIn"
-      onClick={() => setMobileOpen(false)}
-    >
-      <button
-        className="absolute top-8 right-8 text-white"
-        onClick={() => setMobileOpen(false)}
-      >
-        <HiX size={36} />
-      </button>
+            <button
+              onClick={() => {
+                setMobileOpen(false);
+                document.getElementById("newsletter")?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }}
+              className="px-6 py-3 bg-white text-[#211F40] rounded-full shadow hover:bg-gray-200 transition"
+            >
+              Zmanim
+            </button>
 
-      <Link href="/" onClick={() => setMobileOpen(false)}>
-        Home
-      </Link>
+            <Link
+              href="/donate"
+              onClick={() => setMobileOpen(false)}
+              className="px-6 py-3 border-2 border-white rounded-full hover:bg-white hover:text-[#211F40] transition"
+            >
+              Donate
+            </Link>
 
-      <button
-        onClick={handleZmanimClick}
-        className="px-6 py-3 bg-white text-black rounded-full text-xl shadow hover:bg-gray-200 transition"
-      >
-        Zmanim
-      </button>
-
-      <Link
-        href="/donate"
-        onClick={() => setMobileOpen(false)}
-        className="px-6 py-3 border-2 border-white rounded-full hover:bg-white hover:text-black transition"
-      >
-        Donate
-      </Link>
-    </div>
-  )}
-</header>
-
-{/* ========================= END UPDATED HEADER ========================= */}
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="text-lg underline opacity-70 hover:opacity-100"
+            >
+              Close
+            </button>
+          </div>
+        )}
+      </header>
 
       <div className="pt-20" />
 
@@ -191,7 +155,7 @@ export default function Home() {
           alt="Hero Image"
           width={1920}
           height={584}
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black opacity-50" />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -211,11 +175,18 @@ export default function Home() {
           <h1 className="text-4xl font-semibold mb-6 text-gray-800">
             About Our Community
           </h1>
-          <p className="text-lg text-gray-700 leading-relaxed">
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
             Welcome to our community! We’re a group of passionate individuals
-            who share ideas, stories, and creativity. Our mission is to bring
-            people together, inspire growth, and make every member feel at home.
+            who share ideas, stories, and creativity.
           </p>
+
+          {/* NEW DONATE BUTTON */}
+          <Link
+            href="/donate"
+            className="inline-block mt-4 px-8 py-4 bg-[#211F40] text-white rounded-full text-lg font-semibold shadow-lg hover:bg-[#322e6b] transition"
+          >
+            Donate
+          </Link>
         </div>
       </section>
 
@@ -226,23 +197,10 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-6">
             <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
-              <Image
-                src="/heroph.jpg"
-                alt="Gallery Image"
-                width={800}
-                height={600}
-                className="w-full h-full object-cover"
-              />
+              <Image src="/heroph.jpg" alt="Gallery Image" width={800} height={600} className="w-full h-full object-cover" />
             </div>
-
             <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
-              <Image
-                src="/heroph.jpg"
-                alt="Gallery Image"
-                width={800}
-                height={600}
-                className="w-full h-full object-cover"
-              />
+              <Image src="/heroph.jpg" alt="Gallery Image" width={800} height={600} className="w-full h-full object-cover" />
             </div>
           </div>
 
@@ -256,32 +214,52 @@ export default function Home() {
       </section>
 
       {/* NEWSLETTER */}
-      <section
-        id="newsletter"
-        className="flex justify-center items-center py-16 px-6 bg-white/30"
-      >
+      <section id="newsletter" className="flex justify-center items-center py-16 px-6 bg-white/30">
         <div className="w-full max-w-5xl bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-200">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
             Our Latest Newsletter
           </h2>
-
           {latestNewsletter ? (
-            <iframe
-              src={latestNewsletter}
-              className="w-full h-[800px] rounded-xl border border-gray-300 shadow-lg"
-            />
+            <iframe src={latestNewsletter} className="w-full h-[800px] rounded-xl border border-gray-300 shadow-lg" />
           ) : (
-            <p className="text-center text-gray-700">
-              No newsletter uploaded yet.
-            </p>
+            <p className="text-center text-gray-700">No newsletter uploaded yet.</p>
           )}
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-[#EBE6CA] py-6 text-center text-gray-700 relative">
-        <p>© {new Date().getFullYear()} Community. All rights reserved.</p>
+      {/* UPDATED FOOTER */}
+      <footer className="bg-[#EBE6CA] py-12 px-6 mt-auto relative border-t border-gray-400/40 rounded-t-4xl">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-gray-700">
 
+          {/* COLUMN 1 – QUICK LINKS */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4 text-[#211F40]">Quick Links</h3>
+            <ul className="space-y-2 text-lg">
+              <li><Link href="/" className="hover:underline">Home</Link></li>
+              <li><Link href="#newsletter" className="hover:underline">Zmanim</Link></li>
+              <li><Link href="/gallery" className="hover:underline">Gallery</Link></li>
+              <li><Link href="/donate" className="hover:underline font-semibold">Donate</Link></li>
+            </ul>
+          </div>
+
+          {/* COLUMN 2 – CONTACT INFO */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4 text-[#211F40]">Contact</h3>
+            <p className="text-lg">📞 555-123-4567</p>
+            <p className="text-lg">✉️ info@community.org</p>
+          </div>
+
+          {/* COLUMN 3 – LOCATION */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4 text-[#211F40]">Location</h3>
+            <p className="text-lg leading-relaxed">
+              123 Community Street <br />
+              Jerusalem, Israel
+            </p>
+          </div>
+        </div>
+
+        {/* ADMIN BUTTON */}
         <button
           onClick={() => setAdminOpen(true)}
           className="absolute bottom-4 right-6 text-black underline text-sm hover:text-gray-800 transition"
@@ -298,10 +276,7 @@ export default function Home() {
               onSubmit={handlePasswordSubmit}
               className="bg-[#EBE6CA] rounded-2xl shadow-2xl p-8 w-[90%] max-w-sm text-center"
             >
-              <h2 className="text-2xl font-semibold text-[#211F40] mb-6">
-                Admin Login
-              </h2>
-
+              <h2 className="text-2xl font-semibold text-[#211F40] mb-6">Admin Login</h2>
               <input
                 type="password"
                 placeholder="Enter password"
@@ -309,28 +284,12 @@ export default function Home() {
                 onChange={(e) => setPasswordInput(e.target.value)}
                 className="w-full px-4 py-3 border rounded-lg mb-4 text-gray-800"
               />
-
-              <button
-                type="submit"
-                className="bg-[#211F40] text-white px-6 py-3 rounded-lg hover:bg-[#322e6b] transition w-full"
-              >
-                Submit
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAdminOpen(false)}
-                className="text-gray-600 hover:text-gray-800 mt-3 underline"
-              >
-                Cancel
-              </button>
+              <button type="submit" className="bg-[#211F40] text-white px-6 py-3 rounded-lg hover:bg-[#322e6b] transition w-full">Submit</button>
+              <button type="button" onClick={() => setAdminOpen(false)} className="text-gray-600 hover:text-gray-800 mt-3 underline">Cancel</button>
             </form>
           ) : (
             <div className="bg-[#EBE6CA] rounded-2xl shadow-2xl p-8 w-[90%] max-w-md text-center">
-              <h2 className="text-2xl font-semibold text-[#211F40] mb-6">
-                Upload New Newsletter
-              </h2>
-
+              <h2 className="text-2xl font-semibold text-[#211F40] mb-6">Upload New Newsletter</h2>
               <input
                 type="text"
                 placeholder="Enter newsletter title"
@@ -338,30 +297,13 @@ export default function Home() {
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full px-4 py-3 border rounded-lg mb-4 text-gray-800"
               />
-
               <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-[#211F40]/50 rounded-xl py-10 cursor-pointer hover:bg-[#f4efd7] transition">
                 <Plus className="text-[#211F40]" size={40} />
-                <span className="mt-2 text-gray-700 text-sm">
-                  Click to choose file
-                </span>
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
+                <span className="mt-2 text-gray-700 text-sm">Click to choose file</span>
+                <input type="file" onChange={handleFileChange} className="hidden" />
               </label>
-
-              {file && (
-                <p className="text-sm text-gray-700 mt-2">{file.name}</p>
-              )}
-
-              <button
-                onClick={handleUpload}
-                className="bg-[#211F40] text-white px-6 py-3 rounded-lg mt-4 hover:bg-[#322e6b] transition"
-              >
-                Upload
-              </button>
-
+              {file && <p className="text-sm text-gray-700 mt-2">{file.name}</p>}
+              <button onClick={handleUpload} className="bg-[#211F40] text-white px-6 py-3 rounded-lg mt-4 hover:bg-[#322e6b] transition">Upload</button>
               <button
                 onClick={() => {
                   setAdminOpen(false);
