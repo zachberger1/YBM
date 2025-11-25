@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Plus } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Home() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -16,21 +17,22 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [latestNewsletter, setLatestNewsletter] = useState<string | null>(null);
 
-  // Detect scroll
+  const router = useRouter();
+  const pathname = usePathname();
+
+  /* Scroll CTA visibility */
   useEffect(() => {
     const handleScroll = () => setShowScrollCTA(window.scrollY > 300);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch latest newsletter
+  /* Fetch newsletter */
   useEffect(() => {
     const fetchLatest = async () => {
       try {
         const res = await fetch("/api/latest");
         const data = await res.json();
-        console.log("API /api/latest response:", data);
-
         if (res.ok && data.fileUrl) setLatestNewsletter(data.fileUrl);
       } catch (err) {
         console.error("Error fetching latest newsletter:", err);
@@ -39,6 +41,28 @@ export default function Home() {
     fetchLatest();
   }, []);
 
+  /* Mobile Zmanim scroll */
+  const handleZmanimClick = () => {
+    setMobileOpen(false);
+
+    if (pathname === "/") {
+      const el = document.getElementById("newsletter");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      router.push("/?scroll=newsletter");
+    }
+  };
+
+  /* Scroll after redirect */
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("scroll") === "newsletter") {
+      const el = document.getElementById("newsletter");
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 350);
+    }
+  }, []);
+
+  /* Admin Upload */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files ? e.target.files[0] : null);
   };
@@ -83,36 +107,82 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#fdfbf3] relative">
-      {/* HEADER */}
-      <header className="w-full bg-[#EBE6CA] flex justify-between fixed top-0 left-0 z-50 shadow-md">
-        <div className="max-w-7xl w-full mx-auto flex justify-between items-center px-6 py-2">
-          <Link href="/" className="flex items-center space-x-3">
-            <Image src="/logo.svg" alt="Logo" width={200} height={50} />
-          </Link>
-          <nav className="hidden md:flex gap-6 items-center font-medium text-black">
-            <Link href="/">Home</Link>
-            <Link
-              href="/book"
-              className="px-4 py-2 bg-white text-[#211F40] rounded-full font-semibold shadow hover:bg-gray-200 transition"
-            >
-              Zmanim
-            </Link>
-            <Link
-              href="/donate"
-              className="px-4 py-2 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-[#211F40] transition"
-            >
-              Donate
-            </Link>
-          </nav>
-          <div className="md:hidden">
-            <button onClick={() => setMobileOpen(!mobileOpen)}>
-              {mobileOpen ? <HiX size={28} /> : <HiMenu size={28} />}
-            </button>
-          </div>
-        </div>
-      </header>
 
-      <div className="pt-[80px]" />
+{/* =========================== HEADER UPDATED =========================== */}
+
+<header className="w-full bg-[#EBE6CA] fixed top-0 left-0 z-50 shadow-md">
+  <div className="max-w-7xl w-full mx-auto flex justify-between items-center px-6 py-2">
+
+    {/* Logo */}
+    <Link href="/" className="flex items-center space-x-3">
+      <Image src="/logo.svg" alt="Logo" width={200} height={50} />
+    </Link>
+
+    {/* DESKTOP NAV */}
+    <nav className="hidden md:flex gap-6 items-center font-medium text-black">
+      <Link href="/">Home</Link>
+
+      <button
+        onClick={handleZmanimClick}
+        className="px-4 py-2 bg-white text-[#211F40] rounded-full font-semibold shadow hover:bg-gray-200 transition"
+      >
+        Zmanim
+      </button>
+
+      <Link
+        href="/donate"
+        className="px-4 py-2 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-[#211F40] transition"
+      >
+        Donate
+      </Link>
+    </nav>
+
+    {/* MOBILE BUTTON */}
+    <div className="md:hidden">
+      <button onClick={() => setMobileOpen(true)}>
+        <HiMenu size={28} />
+      </button>
+    </div>
+  </div>
+
+  {/* FULLSCREEN MOBILE OVERLAY */}
+  {mobileOpen && (
+    <div
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center space-y-8 z-[9999] text-white text-2xl font-semibold animate-fadeIn"
+      onClick={() => setMobileOpen(false)}
+    >
+      <button
+        className="absolute top-8 right-8 text-white"
+        onClick={() => setMobileOpen(false)}
+      >
+        <HiX size={36} />
+      </button>
+
+      <Link href="/" onClick={() => setMobileOpen(false)}>
+        Home
+      </Link>
+
+      <button
+        onClick={handleZmanimClick}
+        className="px-6 py-3 bg-white text-black rounded-full text-xl shadow hover:bg-gray-200 transition"
+      >
+        Zmanim
+      </button>
+
+      <Link
+        href="/donate"
+        onClick={() => setMobileOpen(false)}
+        className="px-6 py-3 border-2 border-white rounded-full hover:bg-white hover:text-black transition"
+      >
+        Donate
+      </Link>
+    </div>
+  )}
+</header>
+
+{/* ========================= END UPDATED HEADER ========================= */}
+
+      <div className="pt-20" />
 
       {/* HERO */}
       <div className="relative w-full h-[640px]">
@@ -149,12 +219,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* GALLERY */}
+      <section className="py-16 px-6 bg-[#EBE6CA]/40 flex justify-center">
+        <div className="max-w-5xl w-full text-center">
+          <h2 className="text-3xl font-bold mb-8 text-gray-800">Gallery</h2>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
+              <Image
+                src="/heroph.jpg"
+                alt="Gallery Image"
+                width={800}
+                height={600}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
+              <Image
+                src="/heroph.jpg"
+                alt="Gallery Image"
+                width={800}
+                height={600}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          <Link
+            href="/gallery"
+            className="inline-block mt-8 px-6 py-3 bg-[#211F40] text-white rounded-full shadow hover:bg-[#322e6b] transition"
+          >
+            View Full Gallery
+          </Link>
+        </div>
+      </section>
+
       {/* NEWSLETTER */}
-      <section className="flex justify-center items-center py-16 px-6 bg-[#EBE6CA]/50">
+      <section
+        id="newsletter"
+        className="flex justify-center items-center py-16 px-6 bg-white/30"
+      >
         <div className="w-full max-w-5xl bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-200">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
             Our Latest Newsletter
           </h2>
+
           {latestNewsletter ? (
             <iframe
               src={latestNewsletter}
@@ -165,12 +275,13 @@ export default function Home() {
               No newsletter uploaded yet.
             </p>
           )}
-        </div> 
+        </div>
       </section>
 
       {/* FOOTER */}
       <footer className="bg-[#EBE6CA] py-6 text-center text-gray-700 relative">
         <p>© {new Date().getFullYear()} Community. All rights reserved.</p>
+
         <button
           onClick={() => setAdminOpen(true)}
           className="absolute bottom-4 right-6 text-black underline text-sm hover:text-gray-800 transition"
@@ -190,6 +301,7 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-[#211F40] mb-6">
                 Admin Login
               </h2>
+
               <input
                 type="password"
                 placeholder="Enter password"
@@ -197,12 +309,14 @@ export default function Home() {
                 onChange={(e) => setPasswordInput(e.target.value)}
                 className="w-full px-4 py-3 border rounded-lg mb-4 text-gray-800"
               />
+
               <button
                 type="submit"
                 className="bg-[#211F40] text-white px-6 py-3 rounded-lg hover:bg-[#322e6b] transition w-full"
               >
                 Submit
               </button>
+
               <button
                 type="button"
                 onClick={() => setAdminOpen(false)}
@@ -216,6 +330,7 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-[#211F40] mb-6">
                 Upload New Newsletter
               </h2>
+
               <input
                 type="text"
                 placeholder="Enter newsletter title"
@@ -223,6 +338,7 @@ export default function Home() {
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full px-4 py-3 border rounded-lg mb-4 text-gray-800"
               />
+
               <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-[#211F40]/50 rounded-xl py-10 cursor-pointer hover:bg-[#f4efd7] transition">
                 <Plus className="text-[#211F40]" size={40} />
                 <span className="mt-2 text-gray-700 text-sm">
@@ -234,13 +350,18 @@ export default function Home() {
                   className="hidden"
                 />
               </label>
-              {file && <p className="text-sm text-gray-700 mt-2">{file.name}</p>}
+
+              {file && (
+                <p className="text-sm text-gray-700 mt-2">{file.name}</p>
+              )}
+
               <button
                 onClick={handleUpload}
                 className="bg-[#211F40] text-white px-6 py-3 rounded-lg mt-4 hover:bg-[#322e6b] transition"
               >
                 Upload
               </button>
+
               <button
                 onClick={() => {
                   setAdminOpen(false);
