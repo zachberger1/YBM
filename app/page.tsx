@@ -220,10 +220,22 @@ export default function Home() {
             Our Latest Newsletter
           </h2>
           {latestNewsletter ? (
-            <iframe src={latestNewsletter} className="w-full h-[800px] rounded-xl border border-gray-300 shadow-lg" />
+            <div className="relative w-full max-w-3xl mx-auto h-[500px] md:h-[650px] lg:h-[750px] overflow-hidden rounded-xl shadow-xl bg-white flex items-center justify-center">
+              <img
+                src={latestNewsletter}
+                alt="Newsletter"
+                className="max-h-full max-w-full object-contain"
+              />
+
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition flex items-center justify-center">
+                <span className="text-white text-2xl md:text-3xl font-semibold">Click for Preview</span>
+              </div>
+            </div>
           ) : (
             <p className="text-center text-gray-700">No newsletter uploaded yet.</p>
           )}
+
         </div>
       </section>
 
@@ -282,7 +294,7 @@ export default function Home() {
                 placeholder="Enter password"
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg mb-4 text-gray-800"
+                className="w-full px-4 py-3 border rounded-lg mb-4 text-gray-800 bg-[#e6e1c5]"
               />
               <button type="submit" className="bg-[#211F40] text-white px-6 py-3 rounded-lg hover:bg-[#322e6b] transition w-full">Submit</button>
               <button type="button" onClick={() => setAdminOpen(false)} className="text-gray-600 hover:text-gray-800 mt-3 underline">Cancel</button>
@@ -295,7 +307,7 @@ export default function Home() {
                 placeholder="Enter newsletter title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 border rounded-lg mb-4 text-gray-800"
+                className="w-full px-4 py-3 border rounded-lg mb-4 text-gray-800 bg-[#e6e1c5] "
               />
               <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-[#211F40]/50 rounded-xl py-10 cursor-pointer hover:bg-[#f4efd7] transition">
                 <Plus className="text-[#211F40]" size={40} />
@@ -303,16 +315,19 @@ export default function Home() {
                 <input type="file" onChange={handleFileChange} className="hidden" />
               </label>
               {file && <p className="text-sm text-gray-700 mt-2">{file.name}</p>}
-              <button onClick={handleUpload} className="bg-[#211F40] text-white px-6 py-3 rounded-lg mt-4 hover:bg-[#322e6b] transition">Upload</button>
-              <button
-                onClick={() => {
-                  setAdminOpen(false);
-                  setAuthenticated(false);
-                }}
-                className="text-gray-600 hover:text-gray-800 mt-3 underline"
-              >
-                Close
-              </button>
+              <div className="flex flex-row justify-between ">
+                <button
+                  onClick={() => {
+                    setAdminOpen(false);
+                    setAuthenticated(false);
+                  }}
+                  className="text-gray-600 hover:text-gray-800 mt-3 underline"
+                >
+                  Close
+                </button>
+
+                <button onClick={handleUpload} className="bg-[#211F40] text-white px-6 py-3 rounded-lg mt-4 hover:bg-[#322e6b] transition">Upload</button>
+              </div>
             </div>
           )}
         </div>
