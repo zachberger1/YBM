@@ -15,6 +15,9 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [latestNewsletter, setLatestNewsletter] = useState<string | null>(null);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerImage, setViewerImage] = useState<string | null>(null);
+
 
   useEffect(() => {
     const handleScroll = () => setShowScrollCTA(window.scrollY > 300);
@@ -113,7 +116,7 @@ export default function Home() {
         </div>
 
         {mobileOpen && (
-          <div className="fixed inset-0 bg-black/80 text-white flex flex-col items-center justify-center space-y-8 text-2xl font-semibold z-[9999]">
+          <div className="fixed inset-0 bg-black/80 text-white flex flex-col items-center justify-center space-y-8 text-2xl font-semibold z-9999">
             <Link href="/" onClick={() => setMobileOpen(false)}>Home</Link>
 
             <button
@@ -220,21 +223,30 @@ export default function Home() {
             Our Latest Newsletter
           </h2>
           {latestNewsletter ? (
-            <div className="relative w-full max-w-3xl mx-auto h-[500px] md:h-[650px] lg:h-[750px] overflow-hidden rounded-xl shadow-xl bg-white flex items-center justify-center">
+            <div
+              className="relative w-full max-w-3xl mx-auto h-[500px] md:h-[650px] lg:h-[750px] overflow-hidden rounded-xl shadow-xl bg-white flex items-center justify-center cursor-pointer"
+              onClick={() => {
+                setViewerImage(latestNewsletter);
+                setViewerOpen(true);
+              }}
+            >
               <img
                 src={latestNewsletter}
-                alt="Newsletter"
+                alt="Newsletter Preview"
                 className="max-h-full max-w-full object-contain"
               />
 
               {/* Hover Overlay */}
               <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition flex items-center justify-center">
-                <span className="text-white text-2xl md:text-3xl font-semibold">Click for Preview</span>
+                <span className="text-white text-2xl md:text-3xl font-semibold">
+                  Click for Preview
+                </span>
               </div>
             </div>
           ) : (
             <p className="text-center text-gray-700">No newsletter uploaded yet.</p>
           )}
+
 
         </div>
       </section>
@@ -332,6 +344,104 @@ export default function Home() {
           )}
         </div>
       )}
+     {viewerOpen && viewerImage && (
+  <div
+    className="fixed inset-0 bg-black/90 z-[99999] flex items-start justify-center"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Newsletter preview"
+  >
+    {/* Controls (overlay) — do not affect layout */}
+    <div className="absolute top-4 right-4 flex gap-3 z-[100000]">
+      {/* Print Button */}
+      <button
+        onClick={() => {
+          const win = window.open("", "_blank");
+          if (win) {
+            win.document.write(`
+              <html>
+                <head><title>Print Newsletter</title>
+                <meta name="viewport" content="width=device-width,initial-scale=1" />
+                <style>body{margin:0;background:#fff;}img{max-width:100%;height:auto;display:block;margin:0 auto;}</style>
+                </head>
+                <body>
+                  <img src="${viewerImage}" alt="Newsletter for printing" />
+                </body>
+              </html>
+            `);
+            win.document.close();
+            win.focus();
+            // give the image a moment to load before print; browsers vary
+            setTimeout(() => win.print(), 250);
+          }
+        }}
+        className="px-4 py-2 bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30 transition"
+      >
+        Print
+      </button>
+
+      {/* Share Button */}
+      <button
+        onClick={async () => {
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: "Newsletter",
+                text: "Check out this newsletter",
+                url: viewerImage,
+              });
+            } catch (err) {
+              console.log("Share cancelled");
+            }
+          } else {
+            await navigator.clipboard.writeText(viewerImage);
+            alert("Link copied to clipboard!");
+          }
+        }}
+        className="px-4 py-2 bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30 transition"
+      >
+        Share
+      </button>
+
+      {/* Close Button */}
+      <button
+        onClick={() => setViewerOpen(false)}
+        className="px-4 py-2 bg-red-600/80 text-white font-semibold rounded-lg hover:bg-red-700 transition"
+      >
+        Close
+      </button>
+    </div>
+
+    {/* Image holder: explicit height = viewport height minus controls area.
+        This container is centered and will not be pushed down by controls. */}
+    <div
+      className="w-full h-full flex items-center justify-center"
+      style={{ padding: 0, margin: 0 }}
+    >
+      <div
+        className="flex items-center justify-center"
+        style={{
+          // Reserve space for top controls visually, but do NOT let controls push the image.
+          // We use the full viewport height minus a small gap so the image always fits.
+          height: "calc(100vh - 24px)", // 24px gap for aesthetic breathing room
+          width: "100%",
+        }}
+      >
+        <img
+          src={viewerImage}
+          alt="Fullscreen Newsletter"
+          style={{
+            maxWidth: "100%",
+            maxHeight: "100%",
+            objectFit: "contain", // guarantee whole image visible
+            display: "block",
+          }}
+        />
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
