@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Header from "../components/ui/Header";
+import Footer from "../components/ui/Footer";
 
 export default function GalleryPage() {
   const images = [
@@ -11,12 +13,13 @@ export default function GalleryPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#fdfbf3] pb-20 pt-32 px-6">
+    <div className="min-h-screen bg-[#fdfbf3]  pt-32  ">
+      <Header />
       <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">
         Full Photo Gallery
       </h1>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-6 ">
         {images.map((src, i) => (
           <div
             key={i}
@@ -32,6 +35,7 @@ export default function GalleryPage() {
           </div>
         ))}
       </div>
+      <Footer />
     </div>
   );
 }
