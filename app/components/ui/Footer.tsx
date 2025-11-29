@@ -59,15 +59,14 @@ export default function Footer({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
         {/* COLUMN 2 – CONTACT */}
         <div>
           <h3 className="text-xl font-semibold mb-4 text-[#211F40]">Contact</h3>
-          <p className="text-lg">📞 555-123-4567</p>
-          <p className="text-lg">✉️ info@community.org</p>
+          <p className="text-lg">✉️ Ybmshul@gmail.com</p>
         </div>
 
         {/* COLUMN 3 – LOCATION */}
         <div>
           <h3 className="text-xl font-semibold mb-4 text-[#211F40]">Location</h3>
           <p className="text-lg leading-relaxed">
-            123 Community Street <br />
+            44 King George Street <br />
             Jerusalem, Israel
           </p>
         </div>

@@ -43,7 +43,7 @@ export default function Testimonials() {
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-4"
+                className="shrink-0 w-full md:w-1/2 lg:w-1/3 px-4"
               >
                 <div className="bg-white shadow-md rounded-xl p-6 h-full flex flex-col justify-between">
                   <p className="italic text-lg">“{t.quote}”</p>

@@ -1,33 +1,66 @@
-import { DoorOpen, Car, Accessibility, Home } from "lucide-react"
+"use client";
+
+import { MapPin, Phone, CalendarDays } from "lucide-react";
 
 export default function Amenities() {
-    const features = [
-        { icon: DoorOpen, title: "Spa-Like Preparation Rooms", desc: "Beautifully designed for peace and comfort." },
-        { icon: Car, title: "Private & Handicap Parking", desc: "Ample private parking with handicap spaces." },
-        { icon: Accessibility, title: "Handicap Accessible Rooms", desc: "Designed for full accessibility and comfort." },
-        { icon: Home, title: "Ample Mikvah Pool", desc: "Spacious pool ensuring a calm, serene experience." },
-    ]
-
     return (
-        <section className="py-16 text-gray-800 bg-gray-100">
-            <div className="max-w-6xl mx-auto px-4">
-                <h2 className="text-3xl md:text-4xl font-bold text-center text-[#211F40] mb-10">
-                    Our Amenities
-                </h2>
+        <section className="py-16 px-6 bg-[#EBE6CA]/40 flex justify-center">
+            <div className="max-w-6xl w-full">
 
-                <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                    {features.map((f, index) => (
-                        <div
-                            key={index}
-                            className="bg-gray-100 shadow-md rounded-2xl p-6 flex flex-col items-center text-center border border-gray-200"
-                        >
-                            <f.icon size={40} className="text-[#211F40] mb-4" />
-                            <h3 className="text-xl font-semibold text-[#211F40] mb-2">{f.title}</h3>
-                            <p className="text-sm">{f.desc}</p>
-                        </div>
-                    ))}
+                <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
+                    Amenities
+                </h2>
+                <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center text-center hover:shadow-xl transition">
+                    <MapPin size={48} className="text-[#211F40] mb-4" />
+
+                    <h3 className="text-3xl font-semibold text-gray-800 mb-3">
+                        Location
+                    </h3>
+
+                    <p className="text-gray-700 leading-relaxed">
+                        44 King George Street
+                        Jerusalem, Israel
+                    </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
+
+                    {/* LOCATION */}
+
+
+                    {/* CONTACT */}
+                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center text-center hover:shadow-xl transition">
+                        <Phone size={48} className="text-[#211F40] mb-4" />
+
+                        <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                            Contact Us
+                        </h3>
+
+                        <p className="text-gray-700 leading-relaxed">
+                            Have a question? Reach out at: <br />
+                            <br />
+                            ✉️ Ybmshul@gmail.com
+                        </p>
+                    </div>
+
+
+
+
+                    {/* COMMUNITY EVENTS (SUGGESTED THIRD ITEM) */}
+                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center text-center hover:shadow-xl transition">
+                        <CalendarDays size={48} className="text-[#211F40] mb-4" />
+
+                        <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+                            Community Events
+                        </h3>
+
+                        <p className="text-gray-700 leading-relaxed">
+                            Stay updated on weekly gatherings,
+                            special occasions, and programs.
+                        </p>
+                    </div>
+
                 </div>
             </div>
         </section>
-    )
+    );
 }

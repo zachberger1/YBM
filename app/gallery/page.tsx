@@ -18,15 +18,32 @@ export default function GalleryPage() {
       <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">
         Full Photo Gallery
       </h1>
+      <div className="max-w-6xl mx-auto grid grid-cols-0 sm:grid-cols-0 lg:grid-cols-2 gap-8 pb-6 " >
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-6 ">
+        <Image
+          src="/heroph.jpg"
+          alt={`Gallery Image `}
+          width={800}
+          height={600}
+          className="w-full h-full object-cover  h-64 rounded-xl overflow-hidden shadow-xl"
+        />
+        <Image
+          src="/mm.jpg"
+          alt={`Gallery Image `}
+          width={800}
+          height={600} 
+          className="w-full h-full object-cover h-64 rounded-xl overflow-hidden shadow-xl"
+        />
+      </div>
+
+      {/* <div className="max-w-6xl mx-auto grid grid-cols-0 sm:grid-cols-0 lg:grid-cols-2 gap-8 pb-6 ">
         {images.map((src, i) => (
           <div
             key={i}
             className="w-full h-64 rounded-xl overflow-hidden shadow-xl"
           >
             <Image
-              src={src}
+              src="/heroph.jpg"
               alt={`Gallery Image ${i + 1}`}
               width={800}
               height={600}
@@ -34,7 +51,7 @@ export default function GalleryPage() {
             />
           </div>
         ))}
-      </div>
+      </div> */}
       <Footer />
     </div>
   );
