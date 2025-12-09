@@ -106,20 +106,7 @@ export default function Home() {
         <Amenities />
       </section>
 
-      
-      {/* GALLERY */} <section className="py-16 px-6 bg-[#EBE6CA]/40 flex justify-center">
-        <div className="max-w-5xl w-full text-center">
-          <h2 className="text-3xl font-bold mb-8 text-gray-800">Gallery</h2>
-          <div className="grid grid-cols-2 gap-6">
-            <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
-              <Image src="/heroph.jpg" alt="Gallery Image" width={800} height={600} className="w-full h-full object-cover" /> </div>
-            <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
-              <Image src="/mm.jpg" alt="Gallery Image" width={800} height={600} className="w-full h-full object-cover" /> </div>
-          </div>
-          <Link href="/gallery" className="inline-block mt-8 px-6 py-3 bg-[#211F40] text-white rounded-full shadow hover:bg-[#322e6b] transition" > View Full Gallery </Link>
 
-        </div>
-      </section>
 
       {/* NEWSLETTER PREVIEW */}
       <section id="newsletter" className="flex justify-center items-center py-16 px-6 bg-white/30">
@@ -152,6 +139,22 @@ export default function Home() {
           ) : (
             <p className="text-center text-gray-700">No newsletter uploaded yet.</p>
           )}
+        </div>
+      </section>
+
+      
+      {/* GALLERY */}
+      <section className="py-16 px-6 bg-[#EBE6CA]/40 flex justify-center">
+        <div className="max-w-5xl w-full text-center">
+          <h2 className="text-3xl font-bold mb-8 text-gray-800">Gallery</h2>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
+              <Image src="/heroph.jpg" alt="Gallery Image" width={800} height={600} className="w-full h-full object-cover" /> </div>
+            <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
+              <Image src="/mm.jpg" alt="Gallery Image" width={800} height={600} className="w-full h-full object-cover" /> </div>
+          </div>
+          <Link href="/gallery" className="inline-block mt-8 px-6 py-3 bg-[#211F40] text-white rounded-full shadow hover:bg-[#322e6b] transition" > View Full Gallery </Link>
+
         </div>
       </section>
 

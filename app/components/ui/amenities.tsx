@@ -37,9 +37,9 @@ export default function Amenities() {
 
                         <p className="text-gray-700 leading-relaxed">
                             Have a question? Reach out at: <br />
-                            <br />
-                            ✉️ Ybmshul@gmail.com
-                        </p>
+                            </p>
+                            
+                        <p className="text-xl " >✉️ Ybmshul@gmail.com</p>
                     </div>
 
 
