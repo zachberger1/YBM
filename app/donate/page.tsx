@@ -6,9 +6,9 @@ export default function DonatePage() {
         <div>
             <Header />
 
-            <main className="min-h-screen bg-[#F7F3E3] pt-32 pb-20 px-6 flex flex-col items-center">
+            <main className="min-h-screen bg-[#F7F3E3] pt-32 px-6 flex flex-col items-center">
                 <h1 className="text-3xl font-bold text-[#211F40] mb-4">
-                    Support Our Synagogue
+                    Support Our Kehilla
                 </h1>
 
                 <p className="text-lg text-gray-700 max-w-2xl text-center mb-12">

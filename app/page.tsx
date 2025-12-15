@@ -8,8 +8,6 @@ import Header from "./components/ui/Header";
 import Footer from "./components/ui/Footer";
 import Amenities from "./components/ui/amenities";
 
-
-
 export default function Home() {
   const [showScrollCTA, setShowScrollCTA] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
@@ -20,7 +18,6 @@ export default function Home() {
   const [title, setTitle] = useState("");
 
   const [latestNewsletter, setLatestNewsletter] = useState<string | null>(null);
-
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerImage, setViewerImage] = useState<string | null>(null);
 
@@ -55,9 +52,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#fdfbf3] relative">
-
       <Header />
-
       <div className="pt-20" />
 
       {/* HERO */}
@@ -82,7 +77,7 @@ export default function Home() {
       </div>
 
       {/* ABOUT */}
-      <section className="flex justify-center items-center py-16 px-6">
+      <section className="flex justify-center items-center py-16 px-6 bg-[#fdfbf3]">
         <div className="bg-[#EBE6CA] w-full max-w-4xl p-10 rounded-xl shadow-lg border border-gray-300 text-center">
           <h1 className="text-4xl font-semibold mb-6 text-gray-800">
             About Our Community
@@ -101,6 +96,56 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ABOUT THE RABBI (SUBTLE SECTION) */}
+      <section className="py-12 px-6 bg-white">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+
+          {/* IMAGE */}
+          <div className="flex justify-center">
+            <div className="rounded-xl overflow-hidden shadow-md border border-gray-200 max-w-xs">
+              <Image
+                src="/Rabbi.jpeg"
+                alt="Rabbi Chaim Yagoda"
+                width={320}
+                height={420}
+                className="object-cover w-full h-full"
+              />
+            </div>
+          </div>
+
+          {/* TEXT */}
+          <div>
+            <h2 className="text-2xl font-bold text-[#211F40] mb-4">
+              Rabbi Chaim Yagoda
+            </h2>
+
+            <div className="space-y-3 text-base leading-relaxed text-gray-700">
+              <p>
+                Rabbi Yagoda brings warmth, wisdom, and a deep love of Torah to
+                every shiur he teaches. He leads a morning iyun shiur at
+                EFG@Aish and an afternoon bekiyus shiur in the Beis Medrash,
+                where students are inspired by his clarity and genuine care.
+              </p>
+
+              <p>
+                Originally from Englewood, New Jersey, Rabbi Yagoda made aliyah
+                to Eretz Yisrael after high school. He studied in Yeshivas Derech
+                Hatalmid and later at the Mir Yeshiva, eventually receiving
+                Semicha from the Rabanut HaRashit LeYisrael.
+              </p>
+
+              <p>
+                A beloved member of EFG@Aish for over a decade, Rabbi Yagoda is
+                known for his engaging teaching style and meaningful personal
+                relationships with his talmidim.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    
       {/* AMENITIES */}
       <section>
         <Amenities />
@@ -142,7 +187,7 @@ export default function Home() {
         </div>
       </section>
 
-      
+
       {/* GALLERY */}
       <section className="py-16 px-6 bg-[#EBE6CA]/40 flex justify-center">
         <div className="max-w-5xl w-full text-center">
@@ -155,6 +200,40 @@ export default function Home() {
           </div>
           <Link href="/gallery" className="inline-block mt-8 px-6 py-3 bg-[#211F40] text-white rounded-full shadow hover:bg-[#322e6b] transition" > View Full Gallery </Link>
 
+        </div>
+      </section>
+
+
+      <section className="bg-white/90 py-16 px-6 border-t border-gray-300">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-10">
+            Join Our Community
+          </h2>
+
+          <div className=" gap-10 items-center">
+            {/* LEFT BOX - WhatsApp */}
+            <div className="bg-[#EBE6CA] p-8 rounded-xl shadow-md border border-gray-200">
+              <h3 className="text-2xl font-semibold text-[#211F40] mb-4">
+                Join Through WhatsApp
+              </h3>
+              <p className="text-gray-700 mb-6">
+                Scan the QR code below to join our WhatsApp community and stay
+                updated with weekly news and events.
+              </p>
+              <div className="flex justify-center">
+                <Image
+                  src="/QR.png"
+                  alt="WhatsApp QR Code"
+                  width={180}
+                  height={180}
+                  className="rounded-lg shadow-lg"
+                />
+              </div>
+            </div>
+
+
+
+          </div>
         </div>
       </section>
 
