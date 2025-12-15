@@ -80,11 +80,14 @@ export default function Home() {
       <section className="flex justify-center items-center py-16 px-6 bg-[#fdfbf3]">
         <div className="bg-[#EBE6CA] w-full max-w-4xl p-10 rounded-xl shadow-lg border border-gray-300 text-center">
           <h1 className="text-4xl font-semibold mb-6 text-gray-800">
-            About Our Community
+            About Our Kehilla
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-6">
-            Welcome to our community! We’re a group of passionate individuals
-            who share ideas, stories, and creativity.
+            Our kehillah is a growing, dynamic,leibedik community where achdus and warmth shape everyday life. Grounded in a strong commitment to Limmud HaTorah and Halacha, we nurture learning, mitzvah observance, and heartfelt connection to the R"BSO.
+
+            Reflecting an American-style openness and friendliness, we are proud to create a heartzige environment where every member—whether a local, olah chadasha, visitor, or student from abroad—feels at home and connected, fully part of Yerushalayim Ir HaKodesh.
+
+            While maintaining our distinctive style, we are also part of the larger Yeshurun Beit Knesset, fostering achdus and mutual respect between diverse communities in Eretz Yisrael, a value central to our identity.
           </p>
 
           <Link
@@ -145,7 +148,7 @@ export default function Home() {
         </div>
       </section>
 
-    
+
       {/* AMENITIES */}
       <section>
         <Amenities />
