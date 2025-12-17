@@ -21,7 +21,7 @@ export default function DonatePage() {
                     {/* ISRAEL DONATIONS */}
                     <div className="bg-white shadow-lg rounded-2xl p-8 text-center border border-gray-200">
                         <h2 className="text-xl font-semibold text-[#211F40] mb-4">
-                            Donate from Israel
+                            Donate in NIS
                         </h2>
 
                         <p className="text-gray-600 mb-6">
@@ -41,7 +41,7 @@ export default function DonatePage() {
                     {/* USA DONATIONS */}
                     <div className="bg-white shadow-lg rounded-2xl p-8 text-center border border-gray-200">
                         <h2 className="text-xl font-semibold text-[#211F40] mb-4">
-                            Donate from the United States
+                            Donate in US dollars
                         </h2>
 
                         <p className="text-gray-600 mb-6">
@@ -49,7 +49,7 @@ export default function DonatePage() {
                         </p>
 
                         <a
-                            href="https://pefisrael.org/charity/haskel-veyadoa-bet-shemesh/edit"
+                            href="https://pefisrael.org/charity/haskel-veyadoa-bet-shemesh/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-block px-6 py-3 bg-[#211F40] text-white rounded-full font-semibold shadow hover:bg-[#332e6b] transition"

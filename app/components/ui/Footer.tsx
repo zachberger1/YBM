@@ -59,7 +59,7 @@ export default function Footer({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
         {/* COLUMN 2 – CONTACT */}
         <div>
           <h3 className="text-xl font-semibold mb-4 text-[#211F40]">Contact</h3>
-          <p className="text-lg">✉️ Ybmshul@gmail.com</p>
+          <p className="text-lg">✉️ YBMshul@gmail.com</p>
         </div>
 
         {/* COLUMN 3 – LOCATION */}

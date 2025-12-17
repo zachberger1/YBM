@@ -23,7 +23,7 @@ export default function Header() {
             href="/#newsletter"
             className="px-4 py-2 bg-white text-[#211F40] rounded-full font-semibold shadow hover:bg-gray-200 transition"
           >
-            Zmanim
+            Newsletter
           </Link>
 
           <Link

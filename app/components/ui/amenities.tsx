@@ -16,10 +16,15 @@ export default function Amenities() {
                     <h3 className="text-3xl font-semibold text-gray-800 mb-3">
                         Location
                     </h3>
-
+                    <p className="text-gray-700 text-xl leading-relaxed">
+                        Yeshurun ​​Central Synagogue
+                    </p>
                     <p className="text-gray-700 leading-relaxed">
                         44 King George Street
                         Jerusalem, Israel
+                    </p>
+                    <p className="text-gray-700 leading-relaxed font-semibold">
+                        Beis Medrash Minyan (Right side upon entry into lobby)
                     </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
@@ -37,9 +42,9 @@ export default function Amenities() {
 
                         <p className="text-gray-700 leading-relaxed">
                             Have a question? Reach out at: <br />
-                            </p>
-                            
-                        <p className="text-xl " >✉️ Ybmshul@gmail.com</p>
+                        </p>
+
+                        <p className="text-xl " >✉️ YBMshul@gmail.com</p>
                     </div>
 
 
@@ -50,7 +55,7 @@ export default function Amenities() {
                         <CalendarDays size={48} className="text-[#211F40] mb-4" />
 
                         <h3 className="text-2xl font-semibold text-gray-800 mb-3">
-                            Community Events
+                            Kehilla Events
                         </h3>
 
                         <p className="text-gray-700 leading-relaxed">
