@@ -201,7 +201,7 @@ export default function Home() {
             <div className="w-full h-64 rounded-xl overflow-hidden shadow-xl">
               <Image src="/mm.jpg" alt="Gallery Image" width={800} height={600} className="w-full h-full object-cover" /> </div>
           </div>
-          <Link href="/gallery" className="inline-block mt-8 px-6 py-3 bg-[#211F40] text-white rounded-full shadow hover:bg-[#322e6b] transition" > View Full Gallery </Link>
+          <Link href="https://photos.app.goo.gl/WFciJJsdBRu25CCYA" target="_blank" className="inline-block mt-8 px-6 py-3 bg-[#211F40] text-white rounded-full shadow hover:bg-[#322e6b] transition" > View Full Gallery </Link>
 
         </div>
       </section>
