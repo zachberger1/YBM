@@ -44,7 +44,7 @@ export default function Footer({ onOpenAdmin }: { onOpenAdmin?: () => void }) {
               </Link>
             </li>
             <li>
-              <Link href="/gallery" className="hover:underline">
+              <Link href="https://photos.app.goo.gl/WFciJJsdBRu25CCYA" target="_blank" className="hover:underline">
                 Gallery
               </Link>
             </li>
